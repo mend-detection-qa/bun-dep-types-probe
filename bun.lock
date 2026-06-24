@@ -1,78 +1,37 @@
-// Bun lockfile — text JSONC format (Bun 1.2+).
-// Generated for probe: bun-dep-types-probe.
-// Pattern bundle: dep-types-basic + trusted-dependencies.
-// Comments and trailing commas are valid JSONC — a JSONC parser is required to read this file.
 {
   "lockfileVersion": 1,
-
-  // workspaces: root-only project (no monorepo).
-  // All four dependency groups appear at the root workspace level so Mend
-  // can observe how each group is represented in the lockfile vs the manifest.
+  "configVersion": 1,
   "workspaces": {
     "": {
       "name": "bun-dep-types-probe",
-      // group: main — production runtime dep
       "dependencies": {
         "hono": "^4.12.0",
       },
-      // group: dev — only needed at build/test time
       "devDependencies": {
         "typescript": "^5.5.0",
       },
-      // group: main (Bun auto-installs peers) — peer dep resolved to registry entry
-      "peerDependencies": {
-        "react": "^18.0.0",
-      },
-      // group: main with optional flag — platform-specific; absent on non-macOS hosts
       "optionalDependencies": {
         "fsevents": "^2.3.0",
       },
-      // trustedDependencies: install-script allowlist — orthogonal to dep-tree shape.
-      // "esbuild" is NOT a direct dep of this project; listing it tests that Mend
-      // does not break on unknown entries in trustedDependencies.
-      "trustedDependencies": [
-        "fsevents",
-        "esbuild",
-      ],
+      "peerDependencies": {
+        "react": "^18.0.0",
+      },
     },
   },
-
-  // packages: resolved registry entries.
-  // Tuple format: ["name@version", { metadata }, "integrity-hash"]
+  "trustedDependencies": [
+    "fsevents",
+  ],
   "packages": {
+    "fsevents": ["fsevents@2.3.3", "", { "os": "darwin" }, "sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw=="],
 
-    // ── dependencies (group: main) ────────────────────────────────────────────
-    // hono: Bun-native HTTP framework; no runtime deps.
-    "hono": ["hono@4.12.18", {}, "sha512-RWzP96k/yv0PQfyXnWjs6zot20TqfpfsNXhOnev8d1InAxubW93L11/oNUc3tQqn2G0bSdAOBpX+2uDFHV7kdQ=="],
+    "hono": ["hono@4.12.27", "", {}, "sha512-1yrb/+w6HWQJrUCLkJ2IF5jNIPvvFkblV5RNOYl6bV+OA6p9GLcMpHFFGTosSvHvcAUibuUukRqhlYI4z32C7Q=="],
 
-    // ── devDependencies (group: dev) ─────────────────────────────────────────
-    // typescript: TypeScript compiler; no runtime deps.
-    "typescript": ["typescript@5.8.3", {}, "sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ=="],
+    "js-tokens": ["js-tokens@4.0.0", "", {}, "sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ=="],
 
-    // ── peerDependencies (group: main — Bun resolves peers automatically) ────
-    // react 18.3.1: depends on loose-envify.
-    "react": ["react@18.3.1", {
-      "dependencies": {
-        "loose-envify": "^1.1.0",
-      },
-    }, "sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ=="],
+    "loose-envify": ["loose-envify@1.4.0", "", { "dependencies": { "js-tokens": "^3.0.0 || ^4.0.0" }, "bin": { "loose-envify": "cli.js" } }, "sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q=="],
 
-    // Transitive dep pulled in by react.
-    "loose-envify": ["loose-envify@1.4.0", {
-      "dependencies": {
-        "js-tokens": "^3.0.0 || ^4.0.0",
-      },
-    }, "sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q=="],
+    "react": ["react@18.3.1", "", { "dependencies": { "loose-envify": "^1.1.0" } }, "sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ=="],
 
-    // Transitive dep pulled in by loose-envify.
-    "js-tokens": ["js-tokens@4.0.0", {}, "sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ=="],
-
-    // ── optionalDependencies (group: main, optional: true) ───────────────────
-    // fsevents: macOS-only native file-watcher; skipped on Linux/Windows.
-    // Bun marks this as optional in the lockfile — Mend should flag optional: true.
-    "fsevents": ["fsevents@2.3.3", {
-      "os": "darwin",
-    }, "sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw=="],
-
-  },
+    "typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
+  }
 }
