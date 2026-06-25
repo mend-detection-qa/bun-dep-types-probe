@@ -1,13 +1,12 @@
 {
-  "description": "Autotest config for bun-dep-types-probe — Tier 1 / entry #2 of docs/BUN_COVERAGE_PLAN.md. Bundles dep-types-basic + trusted-dependencies. One package per dep group (deps/devDeps/peerDeps/optionalDeps) plus trustedDependencies array.",
+  "description": "Autotest config for bun-dep-types-probe — Tier 1 / entry #2 of docs/BUN_COVERAGE_PLAN.md. Bundles dep-types-basic + trusted-dependencies. Asserts npm/yarn/pnpm parity: Mend keeps ONLY regular `dependencies` (hono) and excludes devDependencies (typescript), peerDependencies (react) and optionalDependencies (fsevents). Tracked by SCA-5896 — currently xfail until the Bun dep-group parity fix ships.",
   "version": 1.8,
   "base_config": {
     "branch": null,
     "validate_scan_output": true,
     "scan_output": {
-      "security_scan_report_conclusion": "success",
       "total_libs_scanned": {
-        "gte": 5
+        "gte": 1
       },
       "expected_messages": []
     },
@@ -16,24 +15,21 @@
       "check_dependency_tree_detection_status": true,
       "check_update_request_sca_results": true,
       "expected_total_dependencies_number": {
-        "gte": 5
-      },
-      "expected_direct_dependencies_number": {
-        "eq": 4
-      },
-      "expected_transitive_dependencies_number": {
         "gte": 1
       },
+      "expected_direct_dependencies_number": {
+        "eq": 1
+      },
+      "expected_transitive_dependencies_number": {
+        "gte": 0
+      },
       "direct_dependencies_names_list_group_id": {
-        "contains": [
-          "fsevents",
-          "hono",
-          "react",        ]
+        "eq": [
+          "hono"
+        ]
       },
       "transitive_dependencies_names_list_group_id": {
-        "contains": [
-          "loose-envify"
-        ]
+        "contains": []
       },
       "expected_package_managers": {
         "contains": [
