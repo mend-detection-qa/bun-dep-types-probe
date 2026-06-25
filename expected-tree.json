@@ -8,65 +8,12 @@
     "name": "bun-dep-types-probe",
     "version": "0.1.0",
     "dependencies": [
-      "hono",
-      "typescript",
-      "react",
-      "fsevents"
+      "hono"
     ]
   },
   "packages": {
     "hono": {
-      "version": "4.12.18",
-      "source": "registry",
-      "group": "main",
-      "dependencies": [],
-      "source_detail": {
-        "registry": "https://registry.npmjs.org"
-      }
-    },
-    "typescript": {
-      "version": "5.8.3",
-      "source": "registry",
-      "group": "dev",
-      "dependencies": [],
-      "source_detail": {
-        "registry": "https://registry.npmjs.org"
-      }
-    },
-    "react": {
-      "version": "18.3.1",
-      "source": "registry",
-      "group": "main",
-      "dependencies": [
-        "loose-envify"
-      ],
-      "source_detail": {
-        "registry": "https://registry.npmjs.org"
-      }
-    },
-    "fsevents": {
-      "version": "2.3.3",
-      "source": "registry",
-      "group": "main",
-      "optional": true,
-      "dependencies": [],
-      "source_detail": {
-        "registry": "https://registry.npmjs.org"
-      }
-    },
-    "loose-envify": {
-      "version": "1.4.0",
-      "source": "registry",
-      "group": "main",
-      "dependencies": [
-        "js-tokens"
-      ],
-      "source_detail": {
-        "registry": "https://registry.npmjs.org"
-      }
-    },
-    "js-tokens": {
-      "version": "4.0.0",
+      "version": "4.12.27",
       "source": "registry",
       "group": "main",
       "dependencies": [],
@@ -78,8 +25,7 @@
   "project_metadata": {
     "source_file": "bun.lock",
     "groups": [
-      "main",
-      "dev"
+      "main"
     ],
     "trusted_dependencies": [
       "fsevents",
@@ -92,39 +38,39 @@
         "manifest_field": "dependencies",
         "expected_group": "main",
         "expected_optional": false
-      },
+      }
+    },
+    "excluded_by_design": {
       "typescript": {
         "manifest_field": "devDependencies",
-        "expected_group": "dev",
-        "expected_optional": false
+        "reason": "devDependencies are dropped by default — npm/yarn/pnpm parity."
       },
       "react": {
         "manifest_field": "peerDependencies",
-        "expected_group": "main",
-        "expected_optional": false,
-        "note": "Bun auto-installs peer deps; resolved entry appears in lockfile packages section alongside runtime deps."
+        "reason": "peerDependencies are dropped by default — npm/yarn/pnpm parity. Its transitives (loose-envify, js-tokens) therefore do not appear either."
       },
       "fsevents": {
         "manifest_field": "optionalDependencies",
-        "expected_group": "main",
-        "expected_optional": true,
-        "note": "optionalDependencies are main-group but must be flagged optional: true. fsevents is also darwin-only (os: darwin in lockfile)."
+        "reason": "optionalDependencies are dropped by default — npm/yarn/pnpm parity."
       }
     },
     "trusted_dependencies_note": "trustedDependencies is an install-script allowlist only. It has no effect on dep-tree shape. 'esbuild' is listed but is NOT a direct dep — Mend must not invent a dep entry for it.",
+    "expected_counts": {
+      "direct": 1,
+      "transitive": 0,
+      "total": 1
+    },
     "known_failure_modes": [
-      "Mend flattens all groups to 'main' — devDependencies loses group='dev' label.",
-      "Mend drops peerDependencies entirely because they are not in dependencies/devDependencies.",
-      "Mend drops fsevents because optional: true deps are excluded from the scan.",
+      "Mend keeps peerDependencies (react) and/or optionalDependencies (fsevents) instead of dropping them, inflating the direct set beyond hono — tracked as SCA-5896. Bun's resolver defaults diverge from npm/yarn/pnpm here.",
+      "Mend keeps devDependencies (typescript) instead of dropping it.",
       "Mend misreads trustedDependencies as a dependency list and emits a ghost 'esbuild' dep.",
       "Mend crashes on JSONC trailing commas in bun.lock before reaching any package entry."
     ]
   },
   "warnings": [
-    "Bun is NOT a UA-supported resolver. Mend will attempt npm-resolver fallback against bun.lock. JSONC comments and trailing commas may cause parse failures depending on Mend UA version.",
-    "peerDependencies (react) appear in the lockfile 'packages' section alongside runtime deps because Bun auto-installs peers. Whether Mend classifies them as group='main' or drops them is the probe's primary classification assertion.",
-    "optionalDependencies (fsevents) carry os='darwin' in the lockfile metadata. On a Linux scan host Bun would skip installation; Mend's static parser should still report the dep with optional: true regardless of the scan host OS.",
-    "trustedDependencies lists 'esbuild' which has no corresponding package in this manifest or lockfile. Mend must ignore unknown trust entries — if a ghost 'esbuild' dep appears in the output tree, that is a false positive.",
-    "typescript group='dev' is the key assertion for the dep-types-basic pattern. If Mend emits group='main' for typescript, the group classification code path is broken."
+    "EXPECTED BEHAVIOR (npm/yarn/pnpm parity): Mend keeps ONLY regular `dependencies` (hono) and drops devDependencies (typescript), peerDependencies (react) and optionalDependencies (fsevents). hono has no dependencies, so the correct tree is 1 direct / 0 transitive / 1 total.",
+    "Until the Bun dep-group parity fix ships, Mend over-reports by keeping peer+optional (and possibly dev) deps. This divergence is tracked as SCA-5896; the autotest is marked xfail against it.",
+    "Bun is NOT a UA-supported resolver. Mend attempts npm-resolver fallback against bun.lock. JSONC comments and trailing commas may cause parse failures depending on Mend UA version.",
+    "trustedDependencies lists 'esbuild' which has no corresponding package in this manifest or lockfile. Mend must ignore unknown trust entries — if a ghost 'esbuild' dep appears in the output tree, that is a false positive."
   ]
 }
