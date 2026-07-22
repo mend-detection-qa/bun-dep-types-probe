@@ -15,10 +15,10 @@
       "check_dependency_tree_detection_status": true,
       "check_update_request_sca_results": true,
       "expected_total_dependencies_number": {
-        "gte": 1
+        "gte": 3
       },
       "expected_direct_dependencies_number": {
-        "eq": 1
+        "eq": 3
       },
       "expected_transitive_dependencies_number": {
         "gte": 0
