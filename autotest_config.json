@@ -25,7 +25,9 @@
       },
       "direct_dependencies_names_list_group_id": {
         "eq": [
-          "hono"
+          "hono",
+          "fsevents",
+          "react"
         ]
       },
       "transitive_dependencies_names_list_group_id": {
