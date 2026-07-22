@@ -35,8 +35,8 @@ No `.whitesource` file is emitted. Bun is NOT in the Mend `install-tool` support
 |---|---|---|---|---|
 | `hono@4.12.18` | `dependencies` | `main` | — | Baseline — must always be `main`. |
 | `typescript@5.8.3` | `devDependencies` | `dev` | — | **Primary assertion.** If emitted as `main`, group classification is broken. |
-| `react@18.3.1` | `peerDependencies` | `main` | — | Bun auto-installs peers; they appear in the lockfile as ordinary packages. Mend may drop them (treated as "not in lock") or misclassify. |
-| `fsevents@2.3.3` | `optionalDependencies` | `main` | `true` | Must carry `optional: true`. Mend may drop entirely on a Linux host even though the lockfile lists the package. |
+| `react@18.3.1` | `peerDependencies` | `main` | — | Bun auto-installs peers; they appear in the lockfile as ordinary packages. Mend may drop them (treated as "not in lock") or misclassify. | UPD -  EXPECTED
+| `fsevents@2.3.3` | `optionalDependencies` | `main` | `true` | Must carry `optional: true`. Mend may drop entirely on a Linux host even though the lockfile lists the package. |UPD -  EXPECTED
 
 ## `trustedDependencies` note
 
